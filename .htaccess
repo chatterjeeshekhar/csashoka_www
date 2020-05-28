@@ -1,0 +1,50 @@
+
+# BEGIN HTTPS Redirection Plugin
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{SERVER_PORT} !^443$
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+# END HTTPS Redirection Plugin
+
+# BEGIN WP Hide & Security Enhancer
+<IfModule mod_rewrite.c> 
+RewriteEngine On 
+RewriteBase / 
+#WriteCheckString:1562502745_77071
+RewriteRule .* - [E=HTTP_MOD_REWRITE:On]
+
+RewriteCond "%{DOCUMENT_ROOT}/wp-content/cache/wph/%{HTTP_HOST}%{REQUEST_URI}" -f
+RewriteRule .* "/wp-content/cache/wph/%{HTTP_HOST}%{REQUEST_URI}" [L]
+
+RewriteRule ^ashoka/layout.css /wp-content/plugins/wp-hide-security-enhancer/router/file-process.php?action=style-clean&file_path=/wp-content/themes/kingster/style.css&replacement_path=/ashoka/layout.css [L,QSA]
+
+RewriteRule ^ashoka/layout.css /wp-content/themes/kingster/style.css [L,QSA]
+
+RewriteRule ^ashoka/(.+) /wp-content/themes/kingster/$1 [L,QSA]
+
+RewriteRule ^modules/(.+) /wp-content/plugins/$1 [L,QSA]
+RewriteCond %{ENV:REDIRECT_STATUS} ^$
+RewriteRule ^wp-content/plugins(.+) /index.php?wph-throw-404 [L]
+RewriteCond %{ENV:REDIRECT_STATUS} ^$
+RewriteCond %{HTTP_COOKIE} !^.*wordpress_logged_in.*$ [NC]
+RewriteRule ^wp-includes(.+) /index.php?wph-throw-404 [L]
+
+RewriteRule ^libs/(.+) /wp-includes/$1 [L,QSA]
+
+RewriteRule ^alluploads/(.+) /wp-content/uploads/$1 [L,QSA]
+</IfModule> 
+
+# END WP Hide & Security Enhancer
+
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+
+# END WordPress
